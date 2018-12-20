@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ValiantPro</title>
+    <link rel="stylesheet" href="valiantPro.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="qrcode.js"></script>
+    <script type="text/javascript" src="instascan.min.js"></script>
+    <style>
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button */
+        .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button id="logout" class="btn btn-danger float-right">Log Out</button>
+    <script>
+        if (localStorage['auth_token'] === undefined){
+            window.location = "index.html"
+        }
+
+        const host = "122.252.228.244:8000";
+        $(document).ready(function(){
+        var modal = document.getElementById('myModal');
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            $("#modal_content").empty();
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                $("#modal_content").empty();
+                modal.style.display = "none";
+            }
+        }
+            let scanner = new Instascan.Scanner({continuous:true, video: document.getElementById('preview') });
+            scanner.addListener('scan', function (content) {
+                console.log(content);
+                var code = $("#Ecode").val();
+                $.ajax({
+                    url: "http://"+host+"/events/api/register/"+code+"/"+content,
+                    headers: {"Authorization": "Token "+localStorage.getItem('auth_token')},
+                    type: "GET",
+                    success:function(result){
+                        var text = $('<p id="modal_text">'+result['participant']['user']['username']+' sucessfully registered for  '+result['event']['name']+'</p>');
+                        $("#modal_content").append(text);
+                        $("#modal_text").css({"color":"green"});
+                        modal.style.display = "block";
+                    },
+                    error:function(xht,status,err){
+                        var text = $('<p id="modal_text">Error occured while registering. Check if you have filled the event code correctly or verify the qr code</p>');
+                        $("#modal_content").append(text);
+                        $("#modal_text").css({"color":"red"});
+                        modal.style.display = "block";
+                    },
+                    async: false
+                });
+                $('#preview').hide();
+                scanner.stop()
+            });
+            var qrcode = new QRCode(document.getElementById("qrcode"), {
+                width : 100,
+                height : 100
+            });
+            var user_id, isCoordinator;
+            $('#forCoord').hide()
+            $('#preview').hide()
+            var fill_details = function(jsonObj){
+                $('#userDetails').append(
+                    `
+                    <p class="card-title"><strong>Username : </strong>${jsonObj['user']['username']}</p>
+                    <p class="card-text" ><strong>Phone : </strong>${jsonObj['phone']}</p>
+                    <p class="card-text"><strong>Email : </strong>${jsonObj['user']['email']}</p>
+                    <p class="card-text"><strong>College : </strong>${jsonObj['college']}</p>
+                    `
+                );
+            }
+            
+            $.ajax({
+                url: "http://"+host+"/events/api/user-details/"+localStorage.getItem('username')+"",
+                headers: {"Authorization": "Token "+localStorage.getItem('auth_token')},
+                type: "GET",
+                success:function(result){
+                    user_id = result['id'];
+                    isCoordinator = result['isCoordinator'];
+                    fill_details(result);
+                    if(isCoordinator) {
+                        $('#forCoord').show();
+                    }
+                },
+                error:function(xht,status,err){
+                    alert("error getting user details");
+                },
+            });
+            $('#GetQr').click(function(){
+                qrcode.makeCode(user_id+"");  
+            });
+            $('#register').click(function(){
+                $('#preview').show()
+                Instascan.Camera.getCameras().then(function (cameras) {
+                    if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                    } else {
+                    console.error('No cameras found.');
+                    }
+                }).catch(function (e) {
+                    console.error(e);
+                });
+            });
+            $('#getStats').click(function(){
+                var table = $('#stats');
+                var code = $('#Ecode').val();
+                $.ajax({
+                    url: "http://"+host+"/events/api/stats/event/"+code+"",
+                    headers: {"Authorization": "Token "+localStorage.getItem('auth_token')},
+                    type: "GET",
+                    success:function(result){
+                        $('#stats').empty();
+                        $('#stats').append(`
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>College</th>
+                                </tr>
+                            </thead>
+                        `);
+                        
+                        $.each(result,function(index,value){
+                            var row =`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${value['participant']['user']['username']}</td>
+                                <td>${value['participant']['user']['email']}</td>
+                                <td>${value['participant']['phone']}</td>
+                                <td>${value['participant']['college']}</td>
+                            </tr>
+                            `;
+                            $('#stats').append(row);
+                        });
+                    },
+                    error:function(xht,status,err){
+                        alert("error stats");
+                    },
+                });
+                
+            });
+            $('#clear').click(function(){
+                    $('#stats').empty();
+            });
+            $('#logout').click(function(){
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('username');
+                window.location = 'index.html';
+            });
+        });
+        
+    </script>
+    <h1 id="logo" class="center">Valiant Pro</h1> 
+    <div class="container"> 
+            
+            <video id="preview"></video>
+            <div id="forCoord">
+                    <div class="form-group">
+                        <input type="text" id="Ecode" class="form-control" placeholder="You Event Code">
+                    </div>
+                    <button id="register"class="btn btn-success">Register User</button>
+                    <div class="btn-group" id="stats_control">
+                        <button id="getStats" class="btn btn-warning    ">See Participans</button>
+                        <button id="clear" class="btn btn-link">Clear</button>
+                    </div>        
+                    <table id="stats" class="table table-dark table-hover table-responsive-lg">
+                        
+                    </table>        
+            </div>
+            <div id="userDetails" class="card">
+            </div>
+            <button id="GetQr" class="btn btn-primary">Get QR</button>
+            <div id="qrContainer">
+                <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+            </div>
+            <!-- Trigger/Open The Modal -->
+        
+            <div id="myModal" class="modal">
+        
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modal_content">
+        
+                </div>
+            </div>
+        
+            </div>
+    </div>
+</body>
+</html>
