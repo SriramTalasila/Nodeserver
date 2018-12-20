@@ -1,0 +1,395 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Events Map</title>
+        <script type="text/javascript">
+			var map,gf=0,ff=0,sf=0;		
+            function GetMap(){
+				var bounds = Microsoft.Maps.LocationRect.fromLocations(new Microsoft.Maps.Location(16.570688, 81.518167), new Microsoft.Maps.Location(16.564088, 81.524418));
+                map = Microsoft.Maps.Map(document.getElementById('valiantmap'),{maxBounds:bounds});
+                map.setView({
+                   mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+                   center: new Microsoft.Maps.Location(16.565963, 81.522330),
+                   zoom:20
+                });
+				
+				 //Request the user's location
+			/*navigator.geolocation.getCurrentPosition(function (position) {
+				var loc = new Microsoft.Maps.Location(
+					position.coords.latitude,
+					position.coords.longitude);
+
+				//Add a pushpin at the user's location.
+				var pin = new Microsoft.Maps.Pushpin(loc, {
+						icon: 'location pin.png',
+						anchor: new Microsoft.Maps.Point(12, 39)
+			});
+            map.entities.push(pin);
+
+            //Center the map on the user's location.
+            map.setView({ center: loc, zoom: 19 });
+        });*/
+				var boundsborder = new Microsoft.Maps.Polyline([bounds.getNorthwest(),
+                    new Microsoft.Maps.Location(bounds.getNorthwest().latitude, bounds.getSoutheast().longitude),
+                    bounds.getSoutheast(),
+                    new Microsoft.Maps.Location(bounds.getSoutheast().latitude, bounds.getNorthwest().longitude),
+                    bounds.getNorthwest()], { strokeColor: 'white', strokeThickness: 3 });
+                map.entities.push(boundsborder);
+				
+				//Ground-floor Tiles
+				var GroundfloorTileSource = new Microsoft.Maps.TileSource({
+                    uriConstructor: 'VIT-GF-Tiles/Layer_NewLayer/{quadkey}.png',
+                    minZoom: 16,
+                    maxZoom: 21,
+                    //bounds: Microsoft.Maps.LocationRect.fromEdges(16.566847, 81.520544,16.564732,81.523514)
+                });
+                var GroundfloorTileLayer = new Microsoft.Maps.TileLayer({
+                    mercator: GroundfloorTileSource,
+                });
+				
+				//First floor Tiles	
+				var FirstfloorTileSource = new Microsoft.Maps.TileSource({
+                    uriConstructor: 'VIT-FF-Tiles/Layer_NewLayer/{quadkey}.png',
+                    minZoom: 16,
+                    maxZoom: 21,
+                    //bounds: Microsoft.Maps.LocationRect.fromEdges(16.566847, 81.520544,16.564732,81.523514)
+                });
+                var FirstfloorTileLayer = new Microsoft.Maps.TileLayer({
+                    mercator: FirstfloorTileSource,
+                });
+				//SecondFloor Tiles
+				var SecondfloorTileSource = new Microsoft.Maps.TileSource({
+                    uriConstructor: 'VIT-SF-Tiles/Layer_NewLayer/{quadkey}.png',
+                    minZoom: 16,
+                    maxZoom: 21,
+                    //bounds: Microsoft.Maps.LocationRect.fromEdges(16.566847, 81.520544,16.564732,81.523514)
+                });
+                var SecondfloorTileLayer = new Microsoft.Maps.TileLayer({
+                    mercator: SecondfloorTileSource,
+                });	
+				
+		UpdateLayer.prototype = new Microsoft.Maps.CustomOverlay({ beneathLabels : false });
+
+        //Define a constructor for the custom overlay class.
+        function UpdateLayer() {
+            this.panUpBtn = document.createElement('input');
+            this.panUpBtn.type = 'button';
+            this.panUpBtn.value = 'Second Floor';
+			this.panUpBtn.style.margin='5px auto';
+			addGroundLayer();
+            this.panUpBtn.onclick = function () {
+                //panMap('up');
+				if(gf == 1){
+					map.layers.remove(GroundfloorTileLayer);
+					gf=0;
+					removepins();
+					addSecondLayer();
+				}
+				else if(ff == 1 ){
+					map.layers.remove(FirstfloorTileLayer);
+					ff=0;
+					removepins();
+					addSecondLayer();
+				}
+				else{
+					map.layers.remove(SecondfloorTileLayer);
+					sf=0;
+					removepins();
+					addSecondLayer();
+				}
+            };
+
+            this.panDownBtn = document.createElement('input');
+            this.panDownBtn.type = 'button';
+			this.panDownBtn.style.margin='5px auto';
+            this.panDownBtn.value = 'First Floor';
+            this.panDownBtn.onclick = function () {
+                //panMap('down');
+				if(gf == 1){
+					map.layers.remove(GroundfloorTileLayer);
+					gf=0;
+					removepins();
+					addFirstLayer();
+				}
+				else if(sf == 1 ){
+					map.layers.remove(SecondfloorTileLayer);
+					sf=0;
+					removepins();
+					addFirstLayer();
+				}
+				else if(ff=1){
+					map.layers.remove(FirstfloorTileLayer);
+					ff=0;
+					removepins();
+					addFirstLayer();
+				}
+            };
+
+            this.panLeftBtn = document.createElement('input');
+            this.panLeftBtn.type = 'button';
+			this.panLeftBtn.style.margin='5px auto';
+            this.panLeftBtn.value = 'Ground Floor';
+            this.panLeftBtn.onclick = function () {
+                //panMap('left');
+				if(ff == 1){
+					map.layers.remove(FirstfloorTileLayer);
+					ff=0;
+					removepins();
+					addGroundLayer();
+				}
+				else if(sf == 1 ){
+					map.layers.remove(SecondfloorTileLayer);
+					sf=0;
+					removepins();
+					addGroundLayer();
+				}
+				else{
+					map.layers.remove(GroundfloorTileLayer);
+					gf=0;
+					removepins();
+					addGroundLayer();
+				}
+            };
+
+        }
+		
+		addGroundLayer = function(){
+			map.layers.insert(GroundfloorTileLayer);
+			gf=1
+			var loc1=new Microsoft.Maps.Location(16.566788, 81.518685);
+			var text={title:"Sports Complex",text:"Badminton"};	
+			AddPin(loc1,text);
+			
+			var loc2=new Microsoft.Maps.Location(16.566746, 81.519047);
+			var text={title:"Sports Complex", text:"Basket Ball"};	
+			AddPin(loc2,text);
+			
+			var loc3=new Microsoft.Maps.Location(16.568192, 81.518982);
+			var text={title:"Sports Complex", text:"VollyBall&ThrowBall"};	
+			AddPin(loc3,text);
+			
+			var loc4=new Microsoft.Maps.Location(16.567992, 81.519334);
+			var text={title:"Club House", text:"Math Quiz"};	
+			AddPin(loc4,text);
+			
+			var loc5=new Microsoft.Maps.Location(16.565940, 81.522624);
+			var text={title:"Block-A open Area", text:"Robo Soccer"};	
+			AddPin(loc5,text);
+			
+			var loc6=new Microsoft.Maps.Location(16.565935, 81.523036);
+			var text={title:"East Portocov", text:"Drone Voyage"};	
+			AddPin(loc6,text);
+			
+			var loc7=new Microsoft.Maps.Location(16.564809, 81.521861);
+			var text={title:"VT Lab(SouthGate)", text:"Engine Assemly & Dis-assembly"};	
+			AddPin(loc7,text);
+			
+			var loc8=new Microsoft.Maps.Location(16.565591, 81.521579);
+			var text={title:"Opp VIT Block-5", text:"Building Mania"};	
+			AddPin(loc8,text);
+			
+			var loc9=new Microsoft.Maps.Location(16.567753, 81.518875);
+			var text={title:"SportsComplex Ground", text:"Crazy Rocket"};	
+			AddPin(loc9,text);
+			
+			var loc10=new Microsoft.Maps.Location(16.567421, 81.518968);
+			var text={title:"SportsComplex Ground", text:"BRAHMOS"};	
+			AddPin(loc10,text);
+			
+			var loc11=new Microsoft.Maps.Location(16.565820, 81.522194);
+			var text={title:"B-111", text:"Super Structure"};	
+			AddPin(loc11,text);
+			
+			var loc12=new Microsoft.Maps.Location(16.565904, 81.522809);
+			var text={title:"Block-A open Area", text:"Cliste Carr"};	
+			AddPin(loc12,text);
+			
+			var loc13=new Microsoft.Maps.Location(16.565862, 81.522601);
+			var text={title:"A-106", text:"Restore"};	
+			AddPin(loc13,text);
+			
+			var loc14=new Microsoft.Maps.Location(16.566042, 81.522675);
+			var text={title:"A-114", text:"Mind Fizz"};	
+			AddPin(loc14,text);
+			
+			var loc15=new Microsoft.Maps.Location(16.565832, 81.522786);
+			var text={title:"A-107&A-108", text:"Tech-Mod"};	
+			AddPin(loc15,text);
+			
+			var loc16=new Microsoft.Maps.Location(16.565445, 81.522320);
+			var text={title:"Opp to Block-B", text:"Topography"};	
+			AddPin(loc16,text);
+			var loc17=new Microsoft.Maps.Location(16.566003, 81.522707);
+			var text={title:"A-113", text:"C-SAAPP"};	
+			AddPin(loc17,text);
+		}
+		
+		addFirstLayer = function(){
+			map.layers.insert(FirstfloorTileLayer);
+			ff=1
+			var loc1=new Microsoft.Maps.Location(16.565600, 81.522526);
+			var text={title:"B-207", text:"Potential Professor"};	
+			AddPin(loc1,text);
+			
+			var loc2=new Microsoft.Maps.Location(16.565757, 81.522368);
+			var text={title:"B-216",text:"CAD War"};	
+			AddPin(loc2,text);
+			
+			var loc4=new Microsoft.Maps.Location(16.565782, 81.522247);
+			var text={title:"B-218",text:"CAD Conquer"};	
+			AddPin(loc4,text);
+			
+			var loc5=new Microsoft.Maps.Location(16.565729, 81.522305);
+			var text={title:"B-217",text:"CNC Curve"};	
+			AddPin(loc5,text);
+			
+			var loc7=new Microsoft.Maps.Location(16.564828, 81.521848);
+			var text={title:"Drawing Hall-1",text:"Project Expo"};	
+			AddPin(loc7,text);
+			
+			var loc8=new Microsoft.Maps.Location(16.565882, 81.522656);
+			var text={title:"A-210",text:"Fox Hunting"};	
+			AddPin(loc8,text);
+			
+			var loc9=new Microsoft.Maps.Location(16.565924, 81.522400);
+			var text={title:"A-202 &A-205",text:"Project Expo(ECE)"};	
+			AddPin(loc9,text);
+			
+			var loc10=new Microsoft.Maps.Location(16.566788, 81.518685);
+			var text={title:"Sports Complex",text:"Badminton"};	
+			AddPin(loc10,text);
+			
+			var loc11=new Microsoft.Maps.Location(16.566746, 81.519047);
+			var text={title:"Sports Complex", text:"Basket Ball"};	
+			AddPin(loc11,text);
+			
+			var loc12=new Microsoft.Maps.Location(16.568192, 81.518982);
+			var text={title:"Sports Complex", text:"VollyBall&ThrowBall"};	
+			AddPin(loc12,text);
+			
+			var loc13=new Microsoft.Maps.Location(16.567992, 81.519334);
+			var text={title:"Club House", text:"Math Quiz"};	
+			AddPin(loc13,text);
+			var loc14=new Microsoft.Maps.Location(16.565935, 81.523036);
+			var text={title:"East Portocov", text:"Drone Voyage"};	
+			AddPin(loc14,text);
+			var loc15=new Microsoft.Maps.Location(16.565591, 81.521579);
+			var text={title:"Opp VIT Block-5", text:"Building Mania"};	
+			AddPin(loc15,text);
+		}
+		
+		addSecondLayer = function(){
+			map.layers.insert(SecondfloorTileLayer);
+			sf=1
+			var loc1=new Microsoft.Maps.Location(16.566010, 81.522212);
+			var text={title:"A-301", text:"Ideathon"};	
+			AddPin(loc1,text);
+			
+			var loc2=new Microsoft.Maps.Location(16.566065, 81.522365);
+			var text={title:"A-321",text:"Code Champs"};	
+			AddPin(loc2,text);
+			
+			var loc3=new Microsoft.Maps.Location(16.565813, 81.522162);
+			var text={title:"B-316",text:"Word Smith"};	
+			AddPin(loc3,text);
+			
+			var loc4=new Microsoft.Maps.Location(16.565765, 81.522325);
+			var text={title:"B-315",text:"Toggle"};	
+			AddPin(loc4,text);
+			
+			var loc5=new Microsoft.Maps.Location(16.564827, 81.521820);
+			var text={title:"Drawing Hall-2",text:"Pencil Sketch"};	
+			AddPin(loc5,text);
+			
+			var loc6=new Microsoft.Maps.Location(16.565555, 81.522699);
+			var text={title:"B-310",text:"Science Expo"};	
+			AddPin(loc6,text);
+			
+			var loc7=new Microsoft.Maps.Location(16.565622, 81.522417);
+			var text={title:"B-306",text:"Debate"};	
+			AddPin(loc7,text);
+			
+			var loc8=new Microsoft.Maps.Location(16.565605, 81.522508);
+			var text={title:"B-307",text:"Young Manager"};	
+			AddPin(loc8,text);
+			
+			var loc9=new Microsoft.Maps.Location(16.565581, 81.522578);
+			var text={title:"B-308",text:"Quiz"};	
+			AddPin(loc9,text);
+			
+			var loc10=new Microsoft.Maps.Location(16.566788, 81.518685);
+			var text={title:"Sports Complex",text:"Badminton"};	
+			AddPin(loc10,text);
+			
+			var loc11=new Microsoft.Maps.Location(16.566746, 81.519047);
+			var text={title:"Sports Complex", text:"Basket Ball"};	
+			AddPin(loc11,text);
+			
+			var loc12=new Microsoft.Maps.Location(16.568192, 81.518982);
+			var text={title:"Sports Complex", text:"VollyBall&ThrowBall"};	
+			AddPin(loc12,text);
+			
+			var loc13=new Microsoft.Maps.Location(16.567992, 81.519334);
+			var text={title:"Club House", text:"Math Quiz"};	
+			AddPin(loc13,text);
+			
+			var loc14=new Microsoft.Maps.Location(16.565935, 81.523036);
+			var text={title:"East Portocov", text:"Drone Voyage"};	
+			AddPin(loc14,text);
+			
+			var loc15=new Microsoft.Maps.Location(16.565591, 81.521579);
+			var text={title:"Opp VIT Block-5", text:"Building Mania"};	
+			AddPin(loc15,text);
+		}
+		
+		
+		
+		removepins = function(){
+			for(var i = map.entities.getLength()-1; i >= 0; i--) {
+				var pushpin = map.entities.get(i);
+				if (pushpin instanceof Microsoft.Maps.Pushpin) {
+					map.entities.removeAt(i);
+				}
+			}
+		}
+
+        //Implement the onAdd method to set up DOM elements, and use setHtmlElement to bind it with the overlay.
+        UpdateLayer.prototype.onAdd = function () {
+            //Create a div that will hold pan buttons.
+            var container = document.createElement('div');
+            container.appendChild(this.panUpBtn);
+            container.appendChild(this.panDownBtn);
+            container.appendChild(this.panLeftBtn);
+            container.style.position = 'absolute';
+            container.style.top = '10px';
+            container.style.left = '10px';
+			container.style.padding='1% 2% 3px 5px';
+            this.setHtmlElement(container);
+        };
+
+        //Implement the new custom overlay class.
+        var Layer = new UpdateLayer();
+
+        //Add the custom overlay to the map.
+        map.layers.insert(Layer);
+		
+		
+        }
+		function AddPin(loc,data) {
+			var pin= new Microsoft.Maps.Pushpin(loc,{
+				title: data.title,
+				subTitle: data.subTitle,
+				text: data.text
+			});			
+			
+			map.entities.push(pin);
+		}
+		</script>
+        <script type="text/javascript" src="https://bing.com/api/maps/mapcontrol?key=ApNBJW3A_lafP26Q9vSDogG7pwMUYGC1KvIV6nNfro34MJWUQmGfKCr0oFCQ5TYz&callback=GetMap" async defer></script>
+    </head>
+    <body> 
+            <div id="valiantmap" style=' position:relative;'></div>
+			
+			
+    </body>
+</html>

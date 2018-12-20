@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<MapGrinderMashupFile Version="1.7">
+  <RenderOptions>
+    <PublishSourceData Value="True" />
+    <PermitComposition Value="True" />
+    <OutputTileType Type="png" />
+    <RenderToFile Folder="C:\Users\SAIRAM\Documents\Valiant Maps\VIT-SF-Tiles" />
+  </RenderOptions>
+  <LayerList>
+    <Layer DisplayName="New Layer" Expanded="True" SimulateTransparencyWithVEBackingLayer="" id="0">
+      <SourceMap DisplayName="VIT-SECONDFLOORS" Expanded="False" id="1">
+        <Document>
+          <FileDocument Filename="C:\Users\SAIRAM\Documents\Valiant Maps\VIT-SECONDFLOORS.png" PageNumber="0" />
+        </Document>
+        <SourceMapInfo>
+          <MapFileURL url="" />
+          <MapHomePage url="" />
+          <MapDescription />
+        </SourceMapInfo>
+        <SourceMapRenderOptions MaxZoom="20" />
+        <TransparencyOptions UseDocumentTransparency="True" Enabled="True" Inverted="False">
+          <FadeOptions DefaultValue="1" />
+        </TransparencyOptions>
+        <SourceMapView locked="True">
+          <ReferenceMapPosition>
+            <MapPosition>
+              <LatLonZoom zoom="16">
+                <LatLon lat="16.5671201133347" lon="81.5214407444" />
+              </LatLonZoom>
+            </MapPosition>
+          </ReferenceMapPosition>
+        </SourceMapView>
+        <SnapView Context="Source">
+          <LatLonZoom zoom="1">
+            <LatLon lat="0" lon="0" />
+          </LatLonZoom>
+        </SnapView>
+        <SnapView Context="Reference">
+          <LatLonZoom zoom="1">
+            <LatLon lat="0" lon="0" />
+          </LatLonZoom>
+        </SnapView>
+        <SnapZoom Context="Source" Zoom="0" />
+        <SnapZoom Context="Reference" Zoom="0" />
+        <RegistrationDefinition WarpQuality="Automatic">
+          <PositionAssociation pinId="0" associationName="Pin0">
+            <SourcePosition>
+              <LatLonZoom zoom="12">
+                <LatLon lat="0.02587890625" lon="0.11737060546875" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.5646221845492" lon="81.5195514634252" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="1" associationName="Pin1">
+            <SourcePosition>
+              <LatLonZoom zoom="12">
+                <LatLon lat="0.550796508789063" lon="0.0330810546875" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="23">
+                <LatLon lat="16.5686862432074" lon="81.5186829306185" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="2" associationName="Pin2">
+            <SourcePosition>
+              <LatLonZoom zoom="11">
+                <LatLon lat="0.714462280273438" lon="0.38995361328125" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.5701048595501" lon="81.521570160985" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="3" associationName="Pin3">
+            <SourcePosition>
+              <LatLonZoom zoom="11">
+                <LatLon lat="0.556015014648438" lon="0.857452392578125" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.5690247903833" lon="81.5254077315331" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="4" associationName="Pin4">
+            <SourcePosition>
+              <LatLonZoom zoom="11">
+                <LatLon lat="0.156753540039063" lon="0.535247802734375" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.5657463047155" lon="81.5228958427906" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="5" associationName="Pin5">
+            <SourcePosition>
+              <LatLonZoom zoom="11">
+                <LatLon lat="0.0149383544921875" lon="0.275634765625" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.5645662675944" lon="81.5208503231406" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="6" associationName="Pin6">
+            <SourcePosition>
+              <LatLonZoom zoom="8">
+                <LatLon lat="0.0391082763671875" lon="0.431884765625" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="21">
+                <LatLon lat="16.5648172510405" lon="81.5221367776394" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="7" associationName="Pin7">
+            <SourcePosition>
+              <LatLonZoom zoom="10">
+                <LatLon lat="0.247421264648438" lon="0.5140380859375" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="22">
+                <LatLon lat="16.566441083539" lon="81.5227030590177" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+          <PositionAssociation pinId="8" associationName="Pin8">
+            <SourcePosition>
+              <LatLonZoom zoom="9">
+                <LatLon lat="0.414535522460938" lon="0.6151123046875" />
+              </LatLonZoom>
+            </SourcePosition>
+            <GlobalPosition>
+              <LatLonZoom zoom="21">
+                <LatLon lat="16.5678283841723" lon="81.5234705060721" />
+              </LatLonZoom>
+            </GlobalPosition>
+          </PositionAssociation>
+        </RegistrationDefinition>
+        <RenderRegion>
+          <LatLon lat="0.758213996887207" lon="0" />
+          <LatLon lat="0" lon="0" />
+          <LatLon lat="0" lon="1" />
+          <LatLon lat="0.758213996887207" lon="1" />
+        </RenderRegion>
+        <LegendList />
+      </SourceMap>
+      <RenderClip />
+    </Layer>
+  </LayerList>
+  <LastView TargetId="1" />
+</MapGrinderMashupFile>

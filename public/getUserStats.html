@@ -56,7 +56,7 @@
             window.location = "index.html"
         }
 
-        const host = "122.252.228.244:8000";
+        const host = "52.66.78.115:5000";
         $(document).ready(function(){
         var modal = document.getElementById('myModal');
         var span = document.getElementsByClassName("close")[0];
@@ -192,6 +192,9 @@
                 localStorage.removeItem('username');
                 window.location = 'index.html';
             });
+            $("#map").click(function(){
+                window.location = "ValiantMap.html"
+            });
         });
         
     </script>
@@ -231,6 +234,7 @@
             </div>
         
             </div>
+            <button id="map"class="btn btn-success">Interactive Map</button>
     </div>
 </body>
 </html>
